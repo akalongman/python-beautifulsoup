@@ -1116,10 +1116,10 @@ class Tag(PageElement):
         space = ''
         indent_space = ''
         if indent_level is not None:
-            indent_space = (' ' * (indent_level - 1))
+            indent_space = (' ' * (indent_level - Tag.indent_size))
         if pretty_print:
             space = indent_space
-            indent_contents = indent_level + 1
+            indent_contents = indent_level + Tag.indent_size
         else:
             indent_contents = None
         contents = self.decode_contents(
@@ -1155,7 +1155,10 @@ class Tag(PageElement):
             s = ''.join(s)
         return s
 
-    def prettify(self, encoding=None, formatter="minimal"):
+    def prettify(self, encoding=None, formatter="minimal", indent_size=4):
+        # @BYME
+        Tag.indent_size = indent_size
+
         if encoding is None:
             return self.decode(True, formatter=formatter)
         else:
@@ -1197,7 +1200,7 @@ class Tag(PageElement):
                 text = text.strip()
             if text:
                 if pretty_print and not self.name == 'pre':
-                    s.append(" " * (indent_level - 1))
+                    s.append(" " * (indent_level - Tag.indent_size))
                 s.append(text)
                 if pretty_print and not self.name == 'pre':
                     s.append("\n")
